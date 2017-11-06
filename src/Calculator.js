@@ -6,23 +6,56 @@ class Calculator extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentChar: 0,
-      currentOperation: null,
+      currentSequence: "0",
+      currentChar: "0",
+      result: false
+
     }
   };
 
+  // TODO: refactor to avoid multiple calls to clear etc
   handleClick = (type, name) => {
 
+    let char = this.state.currentChar;
+    this.state.result && this.clear();
+    type == "dot" && char != "." ||
+    type == "digit" || type == "op" &&
+    Number.isInteger(+char) ?
+    this.addChar(name,type) :
+    type == "clear" ?
+    this.clear():
+    type == "equals" ?
+    this.evaluate():
+    true
+   }
+
+  // TODO: zero division error
+  evaluate = _ => {
+    let sequence = this.state.currentSequence.replace(/x/g,"*");
+    let result = eval(sequence);
+    this.setState(prevState => ({currentChar:result, result: true,
+    currentSequence: prevState.currentSequence + ` = ${result}`}));
+
   }
+
+  addChar = (char, type) => {
+    let w = type == "op" ? " " : "";
+    this.setState(prevState => ({currentSequence:
+      char != "." && prevState.currentSequence == "0" ?
+      char: prevState.currentSequence + w + char + w, currentChar:char}))
+  }
+
+  clear = _ => this.setState({currentSequence: "0", currentChar: "0",
+    result: false});
 
   render() {
 
     let row1 = [["clear", "C"], ["digit","8"], ["digit","9"], ["op", "/"],
-      ["op", "M"]],
-      row2 = [["digit", "5"], ["digit","6"],["digit","7"],["op","X"],
+      ["mem", "M"]],
+      row2 = [["digit", "5"], ["digit","6"],["digit","7"],["mem","x"],
       ["op","M+"]],
       row3 = [["digit","2"],["digit","3"],["digit","4"],["op","-"],
-      ["op","M-"]],
+      ["mem","M-"]],
       row4 = [["digit","0"],["digit","1"],["dot","."],["op","+"],
       ["equals","="]];
 
@@ -31,7 +64,8 @@ class Calculator extends Component {
 
     return (
       <div class="calculator">
-        <Screen currentNumber={this.state.currentChar}/>
+        <Screen currentSequence={this.state.currentSequence}
+          currentChar={this.state.currentChar}/>
         <div class="row">
           {makeRow(row1)}
         </div>
