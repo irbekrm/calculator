@@ -8,7 +8,8 @@ class Calculator extends Component {
     this.state = {
       currentSequence: "0",
       currentChar: "0",
-      result: false
+      result: false,
+      memory: "0"
 
     }
   };
@@ -17,7 +18,11 @@ class Calculator extends Component {
   handleClick = (type, name) => {
 
     let char = this.state.currentChar;
-    this.state.result && this.clear();
+
+    type == "memSave" ? this.memorySave() :
+    type == "memCalc" ? this.memoryCalc(name):
+
+    this.state.result && this.clear(),
     type == "dot" && char != "." ||
     type == "digit" || type == "op" &&
     Number.isInteger(+char) ?
@@ -42,20 +47,44 @@ class Calculator extends Component {
     let w = type == "op" ? " " : "";
     this.setState(prevState => ({currentSequence:
       char != "." && prevState.currentSequence == "0" ?
-      char: prevState.currentSequence + w + char + w, currentChar:char}))
+      char: prevState.currentSequence + w + char + w,
+      currentChar:
+       (typeof (+prevState.currentChar) == "number" &&
+       !isNaN(+prevState.currentChar)||
+      prevState.currentChar == ".") &&
+      ((typeof (+char) == "number" && ! isNaN(+char) &&
+       prevState.currentChar !== "0") || char == ".") ?
+      prevState.currentChar + char : char}))
   }
 
   clear = _ => this.setState({currentSequence: "0", currentChar: "0",
     result: false});
 
+  memoryCalc = name => {
+
+    let result = eval(this.state.memory + name[1] + this.state.currentChar);
+
+    this.setState(prevState => ({
+      currentSequence:prevState.memory + name[1] + prevState.currentChar +"=" + result,
+      currentChar: result,
+      result: true
+    }))
+  }
+
+  memorySave = _ => {
+     this.setState(prevState => ({memory:
+       typeof (+prevState.currentChar) == "number" ? prevState.currentChar :
+       prevState.memory }))
+  };
+
   render() {
 
     let row1 = [["clear", "C"], ["digit","8"], ["digit","9"], ["op", "/"],
-      ["mem", "M"]],
-      row2 = [["digit", "5"], ["digit","6"],["digit","7"],["mem","x"],
-      ["op","M+"]],
+      ["memSave", "M"]],
+      row2 = [["digit", "5"], ["digit","6"],["digit","7"],["op","x"],
+      ["memCalc","M+"]],
       row3 = [["digit","2"],["digit","3"],["digit","4"],["op","-"],
-      ["mem","M-"]],
+      ["memCalc","M-"]],
       row4 = [["digit","0"],["digit","1"],["dot","."],["op","+"],
       ["equals","="]];
 
@@ -64,7 +93,8 @@ class Calculator extends Component {
 
     return (
       <div class="calculator">
-        <Screen currentSequence={this.state.currentSequence}
+        <Screen memory={this.state.memory}
+          currentSequence={this.state.currentSequence}
           currentChar={this.state.currentChar}/>
         <div class="row">
           {makeRow(row1)}
