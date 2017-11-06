@@ -1,6 +1,4 @@
-* {
-  border: 1px solid black;
-}
+
 body {
   margin: 0;
   padding: 0;
@@ -9,17 +7,38 @@ body {
 .wrapper{
   display: flex;
   justify-content: center;
-  margin-top: 30px;
+  margin-top: 50px;
 }
 /*TODO: flexible sizing*/
 .calculator {
+  border: 2px solid green;
+  border-radius: 10px;
+  padding: 5px;
+  padding-top: 8px;
+  background-color: grey;
+}
+.screen {
+  border-radius: 10px;
+  padding: 6px;
+  background-color: lightgray;
+  margin-bottom: 8px;
 }
 button {
   width: 80px;
   height: 80px;
   border-radius: 10px;
   font-size: 20px;
+  margin: 4px;
 }
-.screen > p {
+
+.screen > span {
   display: flex;
+}
+.screen > span:nth-child(2) {
+  justify-content: flex-end;
+  font-size: 50px;
+  margin-bottom: 10px;
+}
+.screen > span:nth-child(3) {
+  justify-content: flex-end;
 }
