@@ -25,7 +25,7 @@ class Calculator extends Component {
     this.state.result && this.clear(),
     type == "dot" && char != "." ||
     type == "digit" || type == "op" &&
-    Number.isInteger(+char) ?
+    typeof (+char) == "number" && !isNaN(+char) ?
     this.addChar(name,type) :
     type == "clear" ?
     this.clear():
@@ -92,6 +92,7 @@ class Calculator extends Component {
       this.handleClick(e[0], e[1])}> {e[1]} </button>));
 
     return (
+      <div class="wrapper">
       <div class="calculator">
         <Screen memory={this.state.memory}
           currentSequence={this.state.currentSequence}
@@ -108,7 +109,7 @@ class Calculator extends Component {
         <div class="row">
           {makeRow(row4)}
         </div>
-
+      </div>
       </div>
     )
   }
