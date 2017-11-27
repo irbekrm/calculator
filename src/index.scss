@@ -1,0 +1,128 @@
+$width: 100vw;
+$height: 100vh;
+$blue: rgb(51, 153, 255);
+$red: rgb(228, 97, 87);
+$yellow: rgb(220, 213, 102);
+$orange: rgb(211, 122, 63);
+$green: rgb(139, 195, 74);
+$shadow: rgb(31, 70, 88);
+$background: rgb(154, 129, 113);
+
+body {
+  background: $background;
+}
+.wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: $height / 15;
+}
+.calculator {
+  border-radius: 4%;
+  padding: $width /100;
+  padding-top: $height /100;
+  background-color: white;
+  box-shadow: 0 10px 3px 3px $shadow;
+  border: 2px solid $shadow;
+}
+.screen {
+  border-radius: 4%;
+  padding: $width / 100;
+  background-color: lightgray;
+  margin-bottom: $height / 100;
+}
+@mixin pressed_button($color) {
+  background-color: darken($color, 5%);
+}
+button {
+  height: $height / 10;
+  min-height: 50px;
+  width: $width / 16;
+  min-width: 50px;
+  border-radius: 10px;
+  font-size: 1.6em;
+  margin: 4px;
+  cursor: pointer;
+  background-color: $blue;
+  border-radius: 12%;
+  border: none;
+  box-shadow: 2px 4px $shadow;
+}
+button:active {
+  transform: translateY(4px);
+  box-shadow: 0 2px darken($shadow, 10%);
+  @include pressed_button($blue);
+}
+button:focus {
+  outline: none;
+}
+.red_button {
+  background: $red;
+}
+.red_button:active {
+  @include pressed_button($red);
+}
+.blue_button {
+  background: $blue;
+}
+.blue_button:active {
+  @include pressed_button($blue);
+}
+.yellow_button {
+  background: $yellow;
+}
+.yellow_button:active {
+  @include pressed_button($yellow);
+}
+.orange_button {
+  background: $orange;
+}
+.orange_button:active {
+  @include pressed_button($orange);
+}
+.green_button {
+  background: $green;
+}
+.green_button:active {
+  @include pressed_button($green);
+}
+#row1 > button {
+  width: 1.4 * ($width / 16);
+  min-width: 80px;
+  @extend .red_button;
+}
+#row1 > button:nth-child(1) {
+  width: 2.2 * ($width / 16);
+  min-width: 100px;
+  @extend .yellow_button;
+}
+#row5 > button:nth-child(1), #row5 > button:nth-child(3) {
+  width: 2 * ($width / 15);
+  min-width: 100px;
+}
+#row5 > button:nth-child(3) {
+  @extend .green_button;
+}
+ #row2 > button:nth-child(1), #row3 > button:nth-child(1), #row4 > button:nth-child(1){
+  @extend .yellow_button;
+}
+#row2 > button:nth-child(5), #row3 > button:nth-child(5), #row4 > button:nth-child(5) {
+  @extend .orange_button;
+}
+.screen {
+  border: 1px solid $shadow;
+}
+.screen > span {
+  display: flex;
+}
+.screen > span:nth-child(2) {
+  justify-content: flex-end;
+  font-size: 2.8em;
+  margin-bottom: $height / 100;
+}
+.screen > span:nth-child(3) {
+  justify-content: flex-end;
+}
+.row {
+  display: flex;
+  justify-content: space-between;
+}

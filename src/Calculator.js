@@ -62,10 +62,10 @@ class Calculator extends Component {
 
   memoryCalc = name => {
 
-    let result = eval(this.state.memory + name[1] + this.state.currentChar);
+    let result = eval(this.state.memory + name[2] + this.state.currentChar);
 
     this.setState(prevState => ({
-      currentSequence:prevState.memory + name[1] + prevState.currentChar +"=" + result,
+      currentSequence:prevState.memory + name[2] + prevState.currentChar +"=" + result,
       currentChar: result,
       result: true
     }))
@@ -78,18 +78,17 @@ class Calculator extends Component {
   };
 
   render() {
-
-    let row1 = [["clear", "C"], ["digit","8"], ["digit","9"], ["op", "/"],
-      ["memSave", "M"]],
-      row2 = [["digit", "5"], ["digit","6"],["digit","7"],["op","x"],
+    let row1 = [["op","+"],["clear","C"],["clearAll","CA"]],
+      row2 = [["op","/"],["digit","7"],["digit","8"],["digit","9"],
+      ["memSave","M"]],
+      row3 = [["op","x"],["digit","4"],["digit","5"],["digit","6"],
       ["memCalc","M+"]],
-      row3 = [["digit","2"],["digit","3"],["digit","4"],["op","-"],
+      row4 = [["op","-"],["digit","1"],["digit","2"],["digit","3"],
       ["memCalc","M-"]],
-      row4 = [["digit","0"],["digit","1"],["dot","."],["op","+"],
-      ["equals","="]];
+      row5 = [["dot","."],["digit","0"],["equals","="]];
 
     let makeRow = arr => arr.map(e => ( <button onClick={ () =>
-      this.handleClick(e[0], e[1])}> {e[1]} </button>));
+      this.handleClick(e[0], e[1])}> {e[1][0]}&nbsp;{e[1][1]} </button>));
 
     return (
       <div class="wrapper">
@@ -97,17 +96,20 @@ class Calculator extends Component {
         <Screen memory={this.state.memory}
           currentSequence={this.state.currentSequence}
           currentChar={this.state.currentChar}/>
-        <div class="row">
+        <div class="row" id ="row1">
           {makeRow(row1)}
         </div>
-        <div class="row">
+        <div class="row" id="row2">
           {makeRow(row2)}
         </div>
-        <div class="row">
+        <div class="row" id="row3">
           {makeRow(row3)}
         </div>
-        <div class="row">
+        <div class="row" id="row4">
           {makeRow(row4)}
+        </div>
+        <div class="row" id="row5">
+          {makeRow(row5)}
         </div>
       </div>
       </div>
