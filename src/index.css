@@ -17,8 +17,9 @@ body {
 .screen {
   border-radius: 4%;
   padding: 1vw;
-  background-color: lightgray;
-  margin-bottom: 1vh; }
+  background-color: #e0d7d2;
+  margin-bottom: 1vh;
+  border: 1px solid #1f4658; }
 
 button {
   height: 10vh;
@@ -73,19 +74,20 @@ button:focus {
   background-color: #7eb73d; }
 
 #row1 > button {
-  width: 8.75vw;
+  width: 9.33333vw;
   min-width: 80px; }
 
 #row1 > button:nth-child(1) {
   width: 13.75vw;
   min-width: 100px; }
 
-#row5 > button:nth-child(1), #row5 > button:nth-child(3) {
+#row5 > button:nth-child(3) {
   width: 13.33333vw;
   min-width: 100px; }
 
-.screen {
-  border: 1px solid #1f4658; }
+#row5 > button:nth-child(1), #row5 > button:nth-child(2) {
+  width: 9.33333vw;
+  min-width: 80px; }
 
 .screen > span {
   display: flex; }

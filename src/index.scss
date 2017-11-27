@@ -27,8 +27,9 @@ body {
 .screen {
   border-radius: 4%;
   padding: $width / 100;
-  background-color: lightgray;
+  background-color: rgb(224, 215, 210);
   margin-bottom: $height / 100;
+  border: 1px solid $shadow;
 }
 @mixin pressed_button($color) {
   background-color: darken($color, 5%);
@@ -86,7 +87,7 @@ button:focus {
   @include pressed_button($green);
 }
 #row1 > button {
-  width: 1.4 * ($width / 16);
+  width: 1.4 * ($width / 15);
   min-width: 80px;
   @extend .red_button;
 }
@@ -95,9 +96,13 @@ button:focus {
   min-width: 100px;
   @extend .yellow_button;
 }
-#row5 > button:nth-child(1), #row5 > button:nth-child(3) {
+#row5 > button:nth-child(3) {
   width: 2 * ($width / 15);
   min-width: 100px;
+}
+#row5 > button:nth-child(1), #row5 > button:nth-child(2) {
+  width: 1.4 * ($width / 15);
+  min-width: 80px;
 }
 #row5 > button:nth-child(3) {
   @extend .green_button;
@@ -107,9 +112,6 @@ button:focus {
 }
 #row2 > button:nth-child(5), #row3 > button:nth-child(5), #row4 > button:nth-child(5) {
   @extend .orange_button;
-}
-.screen {
-  border: 1px solid $shadow;
 }
 .screen > span {
   display: flex;
