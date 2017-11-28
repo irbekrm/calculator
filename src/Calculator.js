@@ -16,15 +16,15 @@ class Calculator extends Component {
 
   // TODO: refactor to avoid multiple calls to clear etc
   handleClick = (type, name) => {
-    console.log(`sequence: ${/(\s*\W\s*){2,}$/.test(this.state.currentSequence)}lenght: ${this.state.currentSequence.length}`);
     let char = this.state.currentChar;
     let sequence = this.state.currentSequence;
     type == "memSave" ? this.memorySave() :
     type == "memCalc" ? this.memoryCalc(name):
 
     this.state.result && this.clear(),
-    type == "dot" && /^\d+$/.test(char) ||
-    type == "digit" || (type == "op" &&
+
+    ((type == "dot" && /^\d+$/.test(char) ||
+    type == "digit") && char.length <= 8) || (type == "op" &&
     ((!isNaN(+char) && sequence !== "0") ||( name == "-" && !/(\s*[-\+\\x]\s*){2,}$/.test(sequence))) && !this.state.result && char[char.length-1] != ".") ?
     this.addChar(name,type) :
     type == "clear" ?
@@ -40,7 +40,7 @@ class Calculator extends Component {
   evaluate = _ => {
     let sequence = this.state.currentSequence.replace(/x/g,"*");
     let result = eval(sequence);
-    this.setState(prevState => ({currentChar:result, result: true,
+    this.setState(prevState => ({currentChar:result + "", result: true,
     currentSequence: prevState.currentSequence + ` = ${result}`}));
 
   }

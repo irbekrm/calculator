@@ -115,6 +115,7 @@ button:focus {
 }
 .screen > span {
   display: flex;
+  overflow: hidden;
 }
 .screen > span:nth-child(2) {
   justify-content: flex-end;
@@ -123,8 +124,12 @@ button:focus {
 }
 .screen > span:nth-child(3) {
   justify-content: flex-end;
+  align-self:flex-end;
 }
 .row {
   display: flex;
   justify-content: space-between;
+}
+#sequence {
+  overflow: hidden;
 }
