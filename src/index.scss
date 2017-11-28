@@ -10,19 +10,24 @@ $background: rgb(154, 129, 113);
 
 body {
   background: $background;
+  color: darken($background, 30%);
+  font-family: serif;
 }
 .wrapper {
   display: flex;
-  justify-content: center;
-  margin-top: $height / 15;
+  flex-direction: column;
+  align-items: center;
 }
+
 .calculator {
   border-radius: 4%;
   padding: $width /100;
-  padding-top: $height /100;
   background-color: white;
   box-shadow: 0 10px 3px 3px $shadow;
   border: 2px solid $shadow;
+  margin-right: $width / 20;
+  font-family: Arial;
+  color: darken($shadow, 10%);
 }
 .screen {
   border-radius: 4%;
@@ -48,6 +53,7 @@ button {
   border-radius: 12%;
   border: none;
   box-shadow: 2px 4px $shadow;
+  color: darken($shadow, 10%);
 }
 button:active {
   transform: translateY(4px);
@@ -130,6 +136,20 @@ button:focus {
   display: flex;
   justify-content: space-between;
 }
-#sequence {
-  overflow: hidden;
+#header {
+  font-size: 2.2em;
+  font-weight: bold;
+  margin: $height / 30;
+}
+#main {
+  display: flex;
+  align-items: baseline;
+}
+#info {
+  max-width: $width / 3;
+  min-width: 300px;
+}
+#innerInfo {
+  display: flex;
+  flex-direction: column;
 }

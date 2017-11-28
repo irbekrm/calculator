@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import Button from './Button.js';
 import Screen from './Screen.js';
-
+import Info from './Info.js';
 class Calculator extends Component {
   constructor(props) {
     super(props);
@@ -99,6 +99,8 @@ class Calculator extends Component {
 
     return (
       <div class="wrapper">
+      <div id="header">CALCULATOR</div>
+      <div id="main">
       <div class="calculator">
         <Screen memory={this.state.memory}
           currentSequence={this.state.currentSequence}
@@ -118,6 +120,8 @@ class Calculator extends Component {
         <div class="row" id="row5">
           {makeRow(row5)}
         </div>
+      </div>
+      <div id="info"><Info/></div>
       </div>
       </div>
     )
