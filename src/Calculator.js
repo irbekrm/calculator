@@ -9,7 +9,8 @@ class Calculator extends Component {
       currentSequence: "0",
       currentChar: "0",
       result: false,
-      memory: "0"
+      memory: "0",
+      error: false
 
     }
   };
@@ -18,10 +19,10 @@ class Calculator extends Component {
   handleClick = (type, name) => {
     let char = this.state.currentChar;
     let sequence = this.state.currentSequence;
-    type == "memSave" && /^[\d\.\s]*\d$/.test(char)? this.memorySave(char) :
-    type == "memCalc" && /^[\d\.\s]*\d$/.test(char) ? this.memoryCalc(name,char):
+    type == "memSave" && /^-?[\d\.\s]*\d$/.test(char)? this.memorySave(char) :
+    type == "memCalc" && /^-?[\d\.\s]*\d$/.test(char) ? this.memoryCalc(name,char):
 
-    this.state.result && this.clear(),
+    (this.state.result || this.state.error) && this.clear(),
 
     ((type == "dot" && /^\d+$/.test(char) ||
     type == "digit") && char.length <= 8) || (type == "op" &&
@@ -40,9 +41,14 @@ class Calculator extends Component {
   evaluate = _ => {
     let sequence = this.state.currentSequence.replace(/x/g,"*");
     let result = eval(sequence);
+    result !== Infinity ?
     this.setState(prevState => ({currentChar:result + "", result: true,
-    currentSequence: prevState.currentSequence + ` = ${result}`}));
+    currentSequence: prevState.currentSequence + ` = ${result}`})):
+    this.displayZeroDivisionError();
 
+  }
+  displayZeroDivisionError = _ => {
+    this.setState(prevState => ({currentChar: "-", currentSequence: "CANNOT DIVIDE BY ZERO", error: true}))
   }
 
   addChar = (char, type) => {
@@ -58,7 +64,7 @@ class Calculator extends Component {
       char
     }))};
   clear = _ => this.setState({currentSequence: "0", currentChar: "0",
-    result: false});
+    result: false, error: false});
 
   clearChar = _ => this.setState(prevState => ({currentChar: prevState.currentChar.replace(/\S\s*$/,"")||"0",
   currentSequence: prevState.currentSequence.replace(/\S\s*$/,"")||"0"}));

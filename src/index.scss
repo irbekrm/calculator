@@ -30,6 +30,7 @@ body {
   background-color: rgb(224, 215, 210);
   margin-bottom: $height / 100;
   border: 1px solid $shadow;
+  box-shadow: inset 0 0 8px $shadow;
 }
 @mixin pressed_button($color) {
   background-color: darken($color, 5%);
@@ -115,7 +116,6 @@ button:focus {
 }
 .screen > span {
   display: flex;
-  overflow: hidden;
 }
 .screen > span:nth-child(2) {
   justify-content: flex-end;
