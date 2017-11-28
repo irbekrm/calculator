@@ -16,20 +16,22 @@ class Calculator extends Component {
 
   // TODO: refactor to avoid multiple calls to clear etc
   handleClick = (type, name) => {
-
+    console.log(`sequence: ${/(\s*\W\s*){2,}$/.test(this.state.currentSequence)}lenght: ${this.state.currentSequence.length}`);
     let char = this.state.currentChar;
-
+    let sequence = this.state.currentSequence;
     type == "memSave" ? this.memorySave() :
     type == "memCalc" ? this.memoryCalc(name):
 
     this.state.result && this.clear(),
-    type == "dot" && char != "." ||
-    type == "digit" || type == "op" &&
-    typeof (+char) == "number" && !isNaN(+char) ?
+    type == "dot" && /^\d+$/.test(char) ||
+    type == "digit" || (type == "op" &&
+    ((!isNaN(+char) && sequence !== "0") ||( name == "-" && !/(\s*[-\+\\x]\s*){2,}$/.test(sequence))) && !this.state.result && char[char.length-1] != ".") ?
     this.addChar(name,type) :
     type == "clear" ?
     this.clear():
-    type == "equals" ?
+    type == "clearChar" ?
+    this.clearChar() :
+    type == "equals" && !isNaN((+char)) && !this.state.result && char[char.length-1] != "." ?
     this.evaluate():
     true
    }
@@ -46,19 +48,20 @@ class Calculator extends Component {
   addChar = (char, type) => {
     let w = type == "op" ? " " : "";
     this.setState(prevState => ({currentSequence:
-      char != "." && prevState.currentSequence == "0" ?
-      char: prevState.currentSequence + w + char + w,
-      currentChar:
-       (typeof (+prevState.currentChar) == "number" &&
-       !isNaN(+prevState.currentChar)||
-      prevState.currentChar == ".") &&
-      ((typeof (+char) == "number" && ! isNaN(+char) &&
-       prevState.currentChar !== "0") || char == ".") ?
-      prevState.currentChar + char : char}))
-  }
-
+      char != "." && prevState.currentChar == "0" ?
+      prevState.currentSequence.replace(/0\s?$/,char): prevState.currentSequence + w + char + w,
+      currentChar :
+      (!(isNaN(+prevState.currentChar)) || prevState.currentChar[prevState.currentChar.length-1] == ".") &&
+      (!(isNaN(+char)) || char == ".") &&
+      (prevState.currentChar !== "0" || char == ".") ?
+      prevState.currentChar + char :
+      char
+    }))};
   clear = _ => this.setState({currentSequence: "0", currentChar: "0",
     result: false});
+
+  clearChar = _ => this.setState(prevState => ({currentChar: prevState.currentChar.replace(/\S\s*$/,"")||"0",
+  currentSequence: prevState.currentSequence.replace(/\S\s*$/,"")||"0"}));
 
   memoryCalc = name => {
 
@@ -78,7 +81,7 @@ class Calculator extends Component {
   };
 
   render() {
-    let row1 = [["op","+"],["clear","C"],["clearAll","CA"]],
+    let row1 = [["op","+"],["clearChar","C"],["clear","CA"]],
       row2 = [["op","/"],["digit","7"],["digit","8"],["digit","9"],
       ["memSave","M"]],
       row3 = [["op","x"],["digit","4"],["digit","5"],["digit","6"],
@@ -88,7 +91,7 @@ class Calculator extends Component {
       row5 = [["dot","."],["digit","0"],["equals","="]];
 
     let makeRow = arr => arr.map(e => ( <button onClick={ () =>
-      this.handleClick(e[0], e[1])}> {e[1][0]}&nbsp;{e[1][1]} </button>));
+      this.handleClick(e[0], e[1])}>{e[1]}</button>));
 
     return (
       <div class="wrapper">
