@@ -18,8 +18,8 @@ class Calculator extends Component {
   handleClick = (type, name) => {
     let char = this.state.currentChar;
     let sequence = this.state.currentSequence;
-    type == "memSave" ? this.memorySave() :
-    type == "memCalc" ? this.memoryCalc(name):
+    type == "memSave" && /^[\d\.\s]*\d$/.test(char)? this.memorySave(char) :
+    type == "memCalc" && /^[\d\.\s]*\d$/.test(char) ? this.memoryCalc(name,char):
 
     this.state.result && this.clear(),
 
@@ -63,21 +63,19 @@ class Calculator extends Component {
   clearChar = _ => this.setState(prevState => ({currentChar: prevState.currentChar.replace(/\S\s*$/,"")||"0",
   currentSequence: prevState.currentSequence.replace(/\S\s*$/,"")||"0"}));
 
-  memoryCalc = name => {
+  memoryCalc = (name, char) => {
 
-    let result = eval(this.state.memory + name[2] + this.state.currentChar);
+    let result = eval(this.state.memory + name[1] + char);
 
     this.setState(prevState => ({
-      currentSequence:prevState.memory + name[2] + prevState.currentChar +"=" + result,
-      currentChar: result,
+      currentSequence:prevState.memory + name[1] + char +"=" + result,
+      currentChar: result+"",
       result: true
     }))
   }
 
-  memorySave = _ => {
-     this.setState(prevState => ({memory:
-       typeof (+prevState.currentChar) == "number" ? prevState.currentChar :
-       prevState.memory }))
+  memorySave = char => {
+     this.setState({memory: char})
   };
 
   render() {
