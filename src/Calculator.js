@@ -66,10 +66,10 @@ class Calculator extends Component {
     let currChar = this.getCurrentChar();
     let currentSequence = this.state.currentSequence;
     let w = ((type == "digit" || type == "dot") && (/\d|\./.test(currChar))) ||
-    /[-x+/]\s*-$/.test(currentSequence) ? "" : " ";
+    /[-x+/]\s*-$|^\s*-\s*$/.test(currentSequence) ? "" : " ";
 
     this.setState(prevState => ({currentSequence:
-      /\d/.test(char) && /^0+$/.test(currChar) ?
+      /\d|-/.test(char) && /^0+$/.test(currChar) ?
       prevState.currentSequence.replace(/0\s?$/,char): `${prevState.currentSequence}${w}${char}`}))
     };
 
