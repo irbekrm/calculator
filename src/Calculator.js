@@ -2,87 +2,93 @@ import React, {Component} from 'react';
 import Button from './Button.js';
 import Screen from './Screen.js';
 import Info from './Info.js';
+
 class Calculator extends Component {
   constructor(props) {
     super(props);
     this.state = {
       currentSequence: "0",
-      currentChar: "0",
       result: false,
       memory: "0",
       error: false
-
     }
   };
 
-  // TODO: refactor to avoid multiple calls to clear etc
+  getCurrentChar = _ => this.state.currentSequence.match(/\S+\s*$/)[0];
+
+  isNumber = x => /^-?[\d\.\s]*\d$/.test(x);
+
   handleClick = (type, name) => {
-    let char = this.state.currentChar;
+
+    let char = this.getCurrentChar();
     let sequence = this.state.currentSequence;
-    type == "memSave" && /^-?[\d\.\s]*\d$/.test(char)? this.memorySave(char) :
-    type == "memCalc" && /^-?[\d\.\s]*\d$/.test(char) ? this.memoryCalc(name,char):
 
-    (this.state.result || this.state.error) && this.clear(),
+    type == "memSave" && this.isNumber(char) ? this.memorySave(char) :
+    type == "memCalc" && this.isNumber(char) ? this.memoryCalc(name,char) :
 
-    ((type == "dot" && /^\d+$/.test(char) ||
-    type == "digit") && char.length <= 8) || (type == "op" &&
-    ((!isNaN(+char) && sequence !== "0") ||( name == "-" && !/(\s*[-\+\\x]\s*){2,}$/.test(sequence))) && !this.state.result && char[char.length-1] != ".") ?
+    (this.state.result || this.state.error || type == "clear") ?
+    this.clear() :
+
+    (type == "dot" && /^-?\d+$/.test(char) && char.length <= 7) ||
+    type == "digit" && char.length <= 8 ||
+    (type == "op" &&
+    (this.isNumber(char) ||
+    (name == "-" && !/(\s*[-\+\\x]\s*){2,}$/.test(sequence)))
+    && char[char.length-1] != ".") ?
     this.addChar(name,type) :
-    type == "clear" ?
-    this.clear():
+
     type == "clearChar" ?
     this.clearChar() :
-    type == "equals" && !isNaN((+char)) && !this.state.result && char[char.length-1] != "." ?
+
+    type == "equals" && this.isNumber(char) ?
     this.evaluate():
-    true
+
+    true;
    }
 
-  // TODO: zero division error
   evaluate = _ => {
-    let sequence = this.state.currentSequence.replace(/x/g,"*");
-    let result = eval(sequence);
-    result !== Infinity ?
-    this.setState(prevState => ({currentChar:result + "", result: true,
-    currentSequence: prevState.currentSequence + ` = ${result}`})):
-    this.displayZeroDivisionError();
 
+    let sequence = this.state.currentSequence.replace(/x/g,"*");
+    let result = `${eval(sequence)}`;
+
+    /-?\d+/.test(result) ?
+    this.setState(prevState => ({result: true,
+    currentSequence: `${prevState.currentSequence} = ${result}`})):
+    this.displayZeroDivisionError();
   }
+
   displayZeroDivisionError = _ => {
-    this.setState(prevState => ({currentChar: "-", currentSequence: "CANNOT DIVIDE BY ZERO", error: true}))
+    this.setState(prevState => ({currentSequence: "CANNOT DIVIDE BY ZERO", error: true}))
   }
 
   addChar = (char, type) => {
-    let w = type == "op" ? " " : "";
+
+    let currChar = this.getCurrentChar();
+    let currentSequence = this.state.currentSequence;
+    let w = ((type == "digit" || type == "dot") && (/\d|\./.test(currChar))) ||
+    /[-x+/]\s*-$/.test(currentSequence) ? "" : " ";
+
     this.setState(prevState => ({currentSequence:
-      char != "." && prevState.currentChar == "0" ?
-      prevState.currentSequence.replace(/0\s?$/,char): prevState.currentSequence + w + char + w,
-      currentChar :
-      (!(isNaN(+prevState.currentChar)) || prevState.currentChar[prevState.currentChar.length-1] == ".") &&
-      (!(isNaN(+char)) || char == ".") &&
-      (prevState.currentChar !== "0" || char == ".") ?
-      prevState.currentChar + char :
-      char
-    }))};
-  clear = _ => this.setState({currentSequence: "0", currentChar: "0",
+      /\d/.test(char) && /^0+$/.test(currChar) ?
+      prevState.currentSequence.replace(/0\s?$/,char): `${prevState.currentSequence}${w}${char}`}))
+    };
+
+  clear = _ => this.setState({currentSequence: "0",
     result: false, error: false});
 
-  clearChar = _ => this.setState(prevState => ({currentChar: prevState.currentChar.replace(/\S\s*$/,"")||"0",
+  clearChar = _ => this.setState(prevState => ({
   currentSequence: prevState.currentSequence.replace(/\S\s*$/,"")||"0"}));
 
   memoryCalc = (name, char) => {
-
-    let result = eval(this.state.memory + name[1] + char);
-
+    let result = eval(`${this.state.memory} ${name[1]} ${char}`);
     this.setState(prevState => ({
-      currentSequence:prevState.memory + name[1] + char +"=" + result,
-      currentChar: result+"",
-      result: true
-    }))
+      currentSequence: `${prevState.memory} ${name[1]} ${char} = ${result}`,
+      result: true }))
   }
 
   memorySave = char => {
-     this.setState({memory: char})
-  };
+   this.setState({memory: char})
+  }
 
   render() {
     let row1 = [["op","+"],["clearChar","C"],["clear","CA"]],
@@ -104,7 +110,7 @@ class Calculator extends Component {
       <div class="calculator">
         <Screen memory={this.state.memory}
           currentSequence={this.state.currentSequence}
-          currentChar={this.state.currentChar}/>
+          currentChar={this.state.error ? "-" : this.getCurrentChar()}/>
         <div class="row" id ="row1">
           {makeRow(row1)}
         </div>

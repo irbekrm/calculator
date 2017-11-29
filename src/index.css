@@ -1,6 +1,7 @@
 body {
-  background: #9a8171;
-  color: #43372f;
+  background: #60686c;
+  color: white;
+  text-shadow: 1px 1px grey;
   font-family: serif; }
 
 .wrapper {

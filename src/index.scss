@@ -9,8 +9,9 @@ $shadow: rgb(31, 70, 88);
 $background: rgb(154, 129, 113);
 
 body {
-  background: $background;
-  color: darken($background, 30%);
+  background: lighten(#303436,20%);
+  color: white;
+  text-shadow: 1px 1px grey;
   font-family: serif;
 }
 .wrapper {
