@@ -29,7 +29,7 @@ class Calculator extends Component {
     type == "clear" ||
     (type == "clearChar" && (this.state.result || this.error)) ?
     this.clear() :
-    
+
     this.state.result || this.state.error ?
     this.afterResult(name, type) :
 
@@ -124,21 +124,8 @@ class Calculator extends Component {
         <Screen memory={this.state.memory}
           currentSequence={this.state.currentSequence}
           currentChar={this.state.error ? "-" : this.getCurrentChar()}/>
-        <div class="row" id ="row1">
-          {makeRow(row1)}
-        </div>
-        <div class="row" id="row2">
-          {makeRow(row2)}
-        </div>
-        <div class="row" id="row3">
-          {makeRow(row3)}
-        </div>
-        <div class="row" id="row4">
-          {makeRow(row4)}
-        </div>
-        <div class="row" id="row5">
-          {makeRow(row5)}
-        </div>
+          {[row1,row2,row3,row4,row5].map((e,i)=>(
+            <div class="row" id={`row${i+1}`}>{makeRow(e)}</div>))}
       </div>
       <div id="info"><Info/></div>
       </div>
