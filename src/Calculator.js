@@ -26,8 +26,12 @@ class Calculator extends Component {
     type == "memSave" && this.isNumber(char) ? this.memorySave(char) :
     type == "memCalc" && this.isNumber(char) ? this.memoryCalc(name,char) :
 
-    (this.state.result || this.state.error || type == "clear") ?
+    type == "clear" ||
+    (type == "clearChar" && (this.state.result || this.error)) ?
     this.clear() :
+    
+    this.state.result || this.state.error ?
+    this.afterResult(name, type) :
 
     (type == "dot" && /^-?\d+$/.test(char) && char.length <= 7) ||
     type == "digit" && char.length <= 8 ||
@@ -55,6 +59,15 @@ class Calculator extends Component {
     this.setState(prevState => ({result: true,
     currentSequence: `${prevState.currentSequence} = ${result}`})):
     this.displayZeroDivisionError();
+  }
+
+  afterResult = (char, type) => {
+    let currChar = this.getCurrentChar();
+    let newSequence = type == "digit" || char == "-" ?
+    this.setState({currentSequence: char, result: false, error: false}) :
+    type == "op" ?
+    this.setState({currentSequence: `${currChar} ${char}`, result: false, error: false}) :
+    true;
   }
 
   displayZeroDivisionError = _ => {
